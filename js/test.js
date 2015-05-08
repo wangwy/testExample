@@ -97,3 +97,28 @@ function pieChart(data, width, height, cx, cy, r, colors, labels, lx, ly) {
   }
   return chart;
 }
+
+/**
+ * 更新SVG时钟来显示当前时间
+ */
+function updateTime() {
+  var now = new Date();//当前时间
+  var sec = now.getSeconds();//秒
+  var min = now.getMinutes();//分钟
+  var hour = (now.getHours()%12)+min/60;//将24计时转换成12计时制度
+  var secangle = sec*6;//每6度表示一秒钟
+  var minangle = min*6;//每6度表示一分钟
+  var hourangle = hour*30;//每30度表示一个小时
+
+  //获取表示时钟时针、分针、秒针的svg元素
+  var sechand = document.getElementById("secondhand");
+  var minhand = document.getElementById("minutehand");
+  var hourhand = document.getElementById("hourhand");
+
+  //设置这些元素的SVG属性，将他们移动到钟面上
+  sechand.setAttribute("transform","rotate("+secangle+",50,50)");
+  minhand.setAttribute("transform","rotate("+minangle+",50,50)");
+  hourhand.setAttribute("transform","rotate("+hourangle+",50,50)");
+  //每一秒钟更新下时钟显示时间
+  setTimeout(updateTime,1000);
+}
