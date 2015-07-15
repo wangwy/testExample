@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #drag {
+            width: 10px;
+            height: 20px;
+            background: #f60;
+            border: 1px solid #f60;
+            position: absolute;
+        }
+
+        #message {
+            width: 100px;
+            height: 100px;
+            background: #f60;
+            position: absolute;
+            display: none;
+            left: 15px;
+        }
+
+        #box {
+            width: 12px;
+            background: #ffffff;
+            border: 1px solid #f60;
+        }
+    </style>
+    <title></title>
+    <script>
+        function Drag() {
+            this.initialize.apply(this, arguments);
+        }
+        Drag.prototype = {
+            initialize: function (options) {
+                this.setOptions(options);
+                this.background = document.getElementById(this.options.backgroundId);
+                this.backgroundBorderWidth = getComputedStyle(this.background,null).getPropertyValue("border-top-width").slice(0,-2);//背景框的边框宽度
+                this.backgroundHeight = this.options.maxContainer.clientHeight - 2 * this.backgroundBorderWidth;
+                this.background.style.height = this.backgroundHeight + "px";
+                this.message = document.getElementById(this.options.messageId);
+                this.drag = document.getElementById(this.options.dragId);
+                this._moveDrag = this.moveDrag.bind(this);
+                this._stopDrag = this.stopDrag.bind(this);
+                this.drag.style.cursor = "move";
+                this.onStart = this.options.onStart;
+                this.onMove = this.options.onMove;
+                this.onStop = this.options.onStop;
+                this.drag.addEventListener("mousedown", this.startDrag.bind(this), false);
+            },
+            moveDrag: function (event) {
+                var event = event || window.event;
+                var iTop = event.clientY;
+                if (iTop < 0) {
+                    iTop = 0;
+                } else if (iTop + this.drag.offsetHeight > this.options.maxContainer.clientHeight) {
+                    iTop = this.options.maxContainer.clientHeight - this.drag.offsetHeight;
+                }
+                this.drag.style.top = iTop + "px";
+                this.showMessage(iTop/(this.options.maxContainer.clientHeight - this.drag.offsetHeight));
+                this.onMove(iTop/(this.options.maxContainer.clientHeight - this.drag.offsetHeight));
+                event.preventDefault && event.preventDefault();
+            },
+            stopDrag: function () {
+                document.removeEventListener("mousemove", this._moveDrag, false);
+                document.removeEventListener("mouseup", this._stopDrag, false);
+                this.message.style.display = "none";
+                this.onStop(this.drag.offsetTop/(this.options.maxContainer.clientHeight - this.drag.offsetHeight));
+                this.drag.releaseCapture && this.drag.releaseCapture();
+            },
+            startDrag: function (event) {
+                var event = event || window.event;
+                document.addEventListener("mousemove", this._moveDrag, false);
+                document.addEventListener("mouseup", this._stopDrag, false);
+                this.showMessage(this.drag.offsetTop/(this.options.maxContainer.clientHeight - this.drag.offsetHeight));
+                event.preventDefault && event.preventDefault();
+                this.onStart(this.drag.offsetTop/(this.options.maxContainer.clientHeight - this.drag.offsetHeight));
+                this.drag.setCapture && this.drag.setCapture();
+            },
+            setOptions: function (options) {
+                this.options = {
+                    backgroundId: "",
+                    dragId: "",
+                    onStart: function(){},
+                    onMove: function(){},
+                    onStop: function(){},
+                    maxContainer: document.documentElement || document.body
+                };
+                for(var p in options) this.options[p] = options[p];
+            },
+            setDragTop: function (per){
+                var percent = per;
+                if(percent < 0){
+                    percent = 0;
+                }else if(percent > 100){
+                    percent = 100;
+                }
+                var top = (this.options.maxContainer.clientHeight - this.drag.offsetHeight) * (percent/100);
+                this.drag.style.top = top + "px";
+            },
+            showMessage: function (percent){
+                this.message.style.display = "block";
+                var messageTop = (this.options.maxContainer.clientHeight - this.drag.offsetHeight) * percent - this.message.offsetHeight/2 + this.drag.offsetHeight/2;
+                if(messageTop < 0){
+                    messageTop = 0;
+                }else if((messageTop + this.message.offsetHeight) > this.options.maxContainer.clientHeight){
+                    messageTop = this.options.maxContainer.clientHeight - this.message.offsetHeight;
+                }
+                this.message.textContent = percent * 100 + "%";
+                this.message.style.top = messageTop + "px";
+            }
+        };
+        window.onload = function () {
+            var oDrag = new Drag({backgroundId: "box", messageId: "message", dragId: "drag"});
+            var input = document.getElementById("input");
+            input.onchange = function(){
+                oDrag.setDragTop(input.value)
+            };
+            oDrag.onStart = function(value){
+                input.value = value * 100;
+            };
+            oDrag.onMove = function(value){
+                input.value = value * 100;
+            };
+            oDrag.onStop = function(value){
+                input.value = value * 100;
+            }
+        }
+    </script>
+</head>
+<body>
+<div id="box">
+    <div id="message"></div>
+    <div id="drag"></div>
+</div>
+<input type="text" id="input" style="position: absolute; top: 0px; left: 200px"/>
+</body>
+</html>
