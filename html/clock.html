@@ -3,6 +3,7 @@
 <head lang="en">
     <meta charset="UTF-8">
     <script src="../js/test.js"></script>
+    <script src="../js/screenfull.js"></script>
     <title>Analog Clock</title>
     <style>
         #clock {
@@ -85,5 +86,13 @@
         <line id="secondhand" x1="50" y1="50" x2="50" y2="20"></line>
     </g>
 </svg>
+<button id="fullScreen">fullScreen</button>
 </body>
+<script>
+    document.getElementById('fullScreen').addEventListener('click',function(){
+        if(screenfull.enabled){
+            screenfull.request();
+        }else{}
+    })
+</script>
 </html>

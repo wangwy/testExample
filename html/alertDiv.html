@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        #button{
+            background-color: #cccccc;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+<button id="button" onclick="showDivSlow('已经是第一页')">button</button>
+</body>
+
+<script>
+    function showDivSlow(info) {
+        var elem = document.createElement("div");
+        elem.style.position = "absolute";
+        elem.style.maxWidth = "200px";
+        elem.style.width = "auto";
+        elem.style.background = "#333";
+		elem.style.font = "14px/20px '宋体','Arail'";
+        elem.style.color = "#fff";
+        elem.style.padding = "10px";
+        elem.style.display = "block";
+        elem.style.opacity = 1;
+        elem.style.top = '50%';
+        elem.style.left = '50%';
+        elem.style.border = "none";
+//		elem.style.boxShadow = "0px 1px 1px #ccc";
+        document.body.appendChild(elem);
+        elem.textContent = info;
+		elem.style.marginLeft = -(elem.getBoundingClientRect().width/2) + "px";
+		elem.style.marginTop = -(elem.getBoundingClientRect().height/2) + "px";
+        var x = 5;
+        var t = setInterval(function () {
+            if (x == "0.00") {
+                clearInterval(t);
+                document.body.removeChild(elem);
+            }
+            x = (x - 0.05).toFixed(2);
+            elem.style.opacity = x;
+        }, 25)
+    }
+</script>
+</html>
