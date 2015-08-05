@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="../bower_components/firebase/firebase.js"></script>
+    <script src="../bower_components/jquery/dist/jquery.js"></script>
+    <title></title>
+</head>
+<body>
+<div id="messageDiv"></div>
+<input type="text" id="nameInput" placeholder="Name"/>
+<input type="text" id="messageInput" placeholder="Message"/>
+<input type="button" id="button" value="save"/>
+<script>
+    var myDataRef = new Firebase('https://torrid-fire-600.firebaseio.com/');
+    $('#button').click(function(e){
+        var name = $('#nameInput').val();
+        var text = $('#messageInput').val();
+        myDataRef.push({name: name, text: text});
+        $('#nameInput').val('');
+        $('#messageInput').val('');
+    });
+
+    myDataRef.on('child_added', function (snapshot) {
+        var message = snapshot.val();
+        displayChatMessage(message.name,message.text);
+    });
+
+    function displayChatMessage(name, text){
+        $('<div/>').text(text).prepend($('<em/>').text(name + ': ')).appendTo($('#messageDiv'));
+        $('#messageDiv')[0].scrollTop = $('#messageDiv')[0].scrollHeight;
+    }
+</script>
+</body>
+</html>
