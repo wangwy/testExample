@@ -158,7 +158,7 @@ EPUBJS.Renderer.prototype.resize = function (width, height, setSize) {
   }
 
   if (this.contents) {
-//    this.reformat();
+    this.reformat();
   }
 
   this.trigger("renderer:resized", {
@@ -223,9 +223,13 @@ EPUBJS.Renderer.prototype.reconcileLayoutSettings = function (global, properties
   return settings;
 };
 
+/**
+ * 加载页面
+ * @param chapter
+ * @returns {*}
+ */
 EPUBJS.Renderer.prototype.load = function (chapter) {
   var deferred = new RSVP.defer();
-  var loaded;
 
   this.layoutMethod = this.determineLayout(this.layoutSettings);
   this.layout = new EPUBJS.Layout[this.layoutMethod]();
@@ -254,6 +258,30 @@ EPUBJS.Renderer.prototype.load = function (chapter) {
   }.bind(this));
 
   return deferred.promise;
+};
+
+/**
+ * 重新更新页面
+ */
+EPUBJS.Renderer.prototype.reformat = function(){
+  var renderer = this;
+  if(!this.contents) return;
+  var spreads = this.determineSpreads(this.minSpreadWidth);
+
+  if(spreads != this.spreads){
+    this.spreads = spreads;
+    this.layoutMethod = this.determineLayout(this.layoutSettings);
+    this.layout = new EPUBJS.Layout[this.layoutMethod]();
+  }
+  this.chapterPos = 1;
+
+  this.render.page(this.chapterPos);
+
+  renderer.formated = renderer.layout.format(renderer.contents, renderer.render.width, renderer.render.height);
+  renderer.render.setPageDimensions(renderer.formated.pageWidth, renderer.formated.pageHeight);
+
+  renderer.updatePages();
+
 };
 
 /**

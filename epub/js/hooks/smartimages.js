@@ -47,10 +47,10 @@ EPUBJS.Hooks.register("beforeChapterDisplay").smartimages = function(callback, r
       }
     }
 
-    item.addEventListener('load',size,false);
+//    item.addEventListener('load',size,false);
     renderer.on("renderer:resized",size);
     renderer.on("renderer:chapterUnloaded",function(){
-      item.removeEventListener('load',size);
+//      item.removeEventListener('load',size);
       renderer.off("renderer:resized",size);
     });
     size();
