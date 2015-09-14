@@ -13,8 +13,17 @@
     <script src="../js/base2/parser.js"></script>
     <script src="../js/base2/section.js"></script>
     <script src="../js/base2/spine.js"></script>
+    <script src="../js/base2/layout.js"></script>
+    <script src="../js/base2/map.js"></script>
+    <script src="../js/base2/queue.js"></script>
+    <script src="../js/base2/rendition.js"></script>
+    <script src="../js/base2/continuous.js"></script>
+    <script src="../js/base2/replacements.js"></script>
+    <script src="../js/base2/section.js"></script>
+    <script src="../js/base2/views.js"></script>
+    <script src="../js/base2/view.js"></script>
     <style type="text/css">
-        body{
+        body {
             margin: 0;
             background: #fafafa;
             font-family: "helvetica neue", Helvetica, Arial, sans-serif;
@@ -22,12 +31,26 @@
             height: 100%;
             width: 100%;
         }
+
+        .epub-container {
+            min-width: 320px;
+            margin: 0 auto;
+        }
+
+        .epub-container .epub-view > iframe {
+            background: white;
+            box-shadow: 0 0 4px #ccc;
+            margin: 10px;
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
 
 <script>
-    var book = ePub("../books/georgia-cfi-20120521/");
+    var book = ePub("../books/f9d2f57d-9b38-47aa-8d56-0b0eb012309f-sd/");
+    var rendition = book.renderTo(document.body, {method: "continuous", width: "800px"});
+    var displayed = rendition.display();
 </script>
 </body>
 </html>

@@ -66,3 +66,4 @@ EPUBJS.Spine.prototype.append = function(section){
 
   return index;
 };
+

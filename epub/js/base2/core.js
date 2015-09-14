@@ -209,3 +209,132 @@ EPUBJS.core.resolveUrl = function (base, path) {
 
   return url.join("/");
 };
+
+/**
+ * 检验数字是否为有效数字（非无穷大、非NaN）
+ * @param n
+ * @returns {boolean}
+ */
+EPUBJS.core.isNumber = function(n){
+  return !isNaN(parseFloat(n)) && isFinite(n);
+};
+
+/**
+ * 将对象的属性复制给target
+ * @param target
+ * @returns {*}
+ */
+EPUBJS.core.extend = function(target){
+  var sources = [].slice.call(arguments,1);
+  sources.forEach(function(source){
+    if(!source) return;
+    Object.getOwnPropertyNames(source).forEach(function(propName){
+      Object.defineProperty(target, propName, Object.getOwnPropertyDescriptor(source, propName));
+    });
+  });
+  return target;
+};
+
+/**
+ * 页面加载前所执行的动画函数
+ */
+EPUBJS.core.requestAnimationFrame = window.requestAnimationFrame;
+
+/**
+ * 形成唯一标识
+ * @returns {string}
+ */
+EPUBJS.core.uuid = function() {
+  var d = new Date().getTime();
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = (d + Math.random()*16)%16 | 0;
+    d = Math.floor(d/16);
+    return (c=='x' ? r : (r&0x7|0x8)).toString(16);
+  });
+  return uuid;
+};
+
+/**
+ * 判断是否是节点
+ * @param obj
+ * @returns {boolean}
+ */
+EPUBJS.core.isElement = function(obj){
+  return !!(obj && obj.nodeType == 1);
+};
+
+/**
+ * 获取节点的高度与宽度
+ * @param el
+ * @returns {{height: number, width: number}}
+ */
+EPUBJS.core.bounds = function(el){
+  var style = window.getComputedStyle(el);
+  var widthProps = ["width", "paddingRight", "paddingLeft", "marginRight", "marginLeft", "borderRightWidth", "borderLeftWidth"];
+  var heightProps = ["height", "paddingTop", "paddingBottom", "marginTop", "marginBottom", "borderTopWidth", "borderBottomWidth"];
+
+  var width = 0;
+  var height = 0;
+
+  widthProps.forEach(function(prop){
+    width += parseFloat(style[prop]) || 0;
+  });
+
+  heightProps.forEach(function(prop){
+    height += parseFloat(style[prop]) || 0;
+  });
+
+  return {
+    height: height,
+    width: width
+  };
+};
+
+/**
+ * 获取节点的边框的宽度
+ * @param el
+ * @returns {{height: number, width: number}}
+ */
+EPUBJS.core.borders = function(el) {
+
+  var style = window.getComputedStyle(el);
+  var widthProps = ["paddingRight", "paddingLeft", "marginRight", "marginLeft", "borderRightWidth", "borderLeftWidth"];
+  var heightProps = ["paddingTop", "paddingBottom", "marginTop", "marginBottom", "borderTopWidth", "borderBottomWidth"];
+
+  var width = 0;
+  var height = 0;
+
+  widthProps.forEach(function(prop){
+    width += parseFloat(style[prop]) || 0;
+  });
+
+  heightProps.forEach(function(prop){
+    height += parseFloat(style[prop]) || 0;
+  });
+
+  return {
+    height: height,
+    width: width
+  };
+
+};
+
+/**
+ * 获取浏览器视口的高度与宽度
+ * @returns {{top: number, left: number, right: Number, bottom: Number, width: Number, height: Number}}
+ */
+EPUBJS.core.windowBounds = function() {
+
+  var width = window.innerWidth;
+  var height = window.innerHeight;
+
+  return {
+    top: 0,
+    left: 0,
+    right: width,
+    bottom: height,
+    width: width,
+    height: height
+  };
+
+};

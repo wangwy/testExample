@@ -120,3 +120,20 @@ EPUBJS.Book.prototype.requestMethod = function (_url) {
     return EPUBJS.core.request(_url, 'xml');
   }
 };
+
+/**
+ * 根据节点与设置判断展现方式
+ * @param element
+ * @param options
+ * @returns {*}
+ */
+EPUBJS.Book.prototype.renderTo = function(element, options){
+  var renderer = (options && options.method) ?
+      options.method.charAt(0).toUpperCase() + options.method.substr(1) :
+      "Rendition";
+  this.rendition = new EPUBJS[renderer](this, options);
+  this.rendition.attachTo(element);
+  return this.rendition;
+};
+
+RSVP.EventTarget.mixin(EPUBJS.Book.prototype);
