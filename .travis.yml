@@ -5,8 +5,9 @@ branches:
  only:
  - gh-pages
 before_install:
-- sudo apt-get update node
-- sudo apt-get install node
+- sudo apt-get install curl
+- curl --silent --location https://deb.nodesource.com/setup_4.x | sudo bash -
+- sudo apt-get install -y nodejs
 before_script:
 - npm install
 - npm install -g bower
