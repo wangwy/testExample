@@ -4,6 +4,8 @@ node_js:
 branches:
  only:
  - gh-pages
+before_install:
+- sudo apt-get install node
 before_script:
 - npm install
 - npm install -g bower
