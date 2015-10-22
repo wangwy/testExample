@@ -5,6 +5,7 @@ branches:
  only:
  - gh-pages
 before_install:
+- sudo apt-get update node
 - sudo apt-get install node
 before_script:
 - npm install
