@@ -168,8 +168,9 @@ EPUBJS.Rendition.prototype._display = function (target) {
   this.views.hide();
 
   //新建一个页面
-  view = new EPUBJS.View(section);
+  view = new EPUBJS.View(section, this.viewSettings);
 
+  this.views.clear();
   //只是添加div，iframe还没有下载
   this.views.append(view);
   view.onDisplayed = this.afterDisplayed.bind(this);
@@ -338,6 +339,20 @@ EPUBJS.Rendition.prototype.isVisible = function (view, offsetPrev, offsetNext, _
   return false;
 };
 
+EPUBJS.Rendition.prototype.scrollBy = function (x, y, silent) {
+  if(silent){
+    this.ignore = true;
+  }
+  if(this.settings.height){
+    if(x) this.container.scrollLeft += x;
+    if(y) this.container.scrollTop += y;
+  }else{
+    window.scrollBy(x,y);
+  }
+
+  this.scrolled = true;
+};
+
 EPUBJS.Rendition.prototype.scrollTo = function (x, y, silent) {
   if (silent) {
     this.ignore = true;
@@ -365,21 +380,19 @@ EPUBJS.Rendition.prototype.bounds = function () {
   return bounds;
 };
 
-EPUBJS.Rendition.prototype.scrollBy = function (x, y, silent) {
-  if (silent) {
-    this.ignore = true;
+/**
+ * 清楚加载的div
+ */
+EPUBJS.Rendition.prototype.destroy = function () {
+  this.q.clear();
+  this.views.clear();
+
+  clearTimeout(this.trimTimeout);
+  if(this.settings.hidden){
+    this.element.removeChild(this.wrapper);
+  }else{
+    this.element.removeChild(this.container);
   }
-
-  if (this.settings.height) {
-
-    if (x) this.container.scrollLeft += x;
-    if (y) this.container.scrollTop += y;
-
-  } else {
-    window.scrollBy(x, y);
-  }
-  this.scrolled = true;
 };
-
 
 RSVP.EventTarget.mixin(EPUBJS.Rendition.prototype);

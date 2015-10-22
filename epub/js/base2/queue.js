@@ -105,3 +105,11 @@ EPUBJS.Queue.prototype.run = function () {
 
   return this.defered.promise;
 };
+
+/**
+ * 清除所有的在等待执行的方法
+ */
+EPUBJS.Queue.prototype.clear = function () {
+  this._q = [];
+  this.running = false;
+};

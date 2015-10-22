@@ -12,11 +12,13 @@ EPUBJS.Continuous = function(book, options) {
 
   EPUBJS.core.extend(this.settings, options);
 
+  this.viewSettings = {};
   if(this.settings.hidden) {
     this.wrapper = this.wrap(this.container);
   }
 };
 
+//继承continuous
 EPUBJS.Continuous.prototype = Object.create(EPUBJS.Rendition.prototype);
 EPUBJS.Continuous.prototype.constructor = EPUBJS.Continuous;
 
@@ -44,12 +46,12 @@ EPUBJS.Continuous.prototype.afterDisplayed = function(currView){
   var prevView, nextView;
 
   if(index + 1 === this.views.length && next) {
-    nextView = new EPUBJS.View(next);
+    nextView = new EPUBJS.View(next, this.viewSettings);
     this.q.enqueue(this.append, nextView);
   }
 
   if(index === 0 && prev) {
-    prevView = new EPUBJS.View(prev);
+    prevView = new EPUBJS.View(prev, this.viewSettings);
     this.q.enqueue(this.prepend, prevView);
   }
 };
@@ -202,11 +204,11 @@ EPUBJS.Continuous.prototype.start = function() {
     }
   }.bind(this));
 
- /* window.addEventListener('unload', function(){
+  window.addEventListener('unload', function(){
     this.ignore = true;
     this.destroy();
   }.bind(this));
-*/
+
   this.tick.call(window, this.onScroll.bind(this));
 
   this.scrolled = false;
@@ -265,4 +267,14 @@ EPUBJS.Continuous.prototype.onScroll = function(){
   this.tick.call(window, this.onScroll.bind(this));
 };
 
+
+EPUBJS.Continuous.prototype.resizeView = function(view) {
+
+  if(this.settings.axis === "horizontal") {
+    view.lock("height", this.stage.width, this.stage.height);
+  } else {
+    view.lock("width", this.stage.width, this.stage.height);
+  }
+
+};
 

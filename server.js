@@ -9,7 +9,7 @@ var port = argv.p,
 	log = console.log;
 
 if (!argv.p) {
-	portfinder.basePort = 8080;
+	portfinder.basePort = 80;
 	portfinder.getPort(function (err, port) {
 	if (err) throw err;
 	listen(port);

@@ -2,15 +2,16 @@
 <head>
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="../../bower_components/jquery.columnizer/src/jquery.columnizer.min.js"></script>
+    <script src="../js/generateStartOffsetFromRange.js"></script>
     <script>
-        /*$(function(){
-            $('body').columnize({
-                width: 700,
-                height: 300
-            })
-        })*/
+        document.addEventListener('mouseup',function(e){
+            var selected = document.getSelection();
+            if(selected.rangeCount > 0){
+                var range = selected.getRangeAt(0);
+                var epubcfi = EpubJs.generateCfiFromRange(range);
+                console.log(epubcfi);
+            }
+        })
     </script>
 </head>
 <body>

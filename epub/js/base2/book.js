@@ -4,7 +4,6 @@
 EPUBJS.Book = function (_url) {
   this.opening = new RSVP.defer();
   this.opened = this.opening.promise;
-  this.isOpen = false;
 
   this.url = undefined;
 

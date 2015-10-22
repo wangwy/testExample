@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+- 0.10
+branches:
+ only:
+ - gh-pages
+before_script:
+- npm install
+- npm install -g bower
+script:
+- bower install
+- sudo node server.js

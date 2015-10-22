@@ -338,3 +338,26 @@ EPUBJS.core.windowBounds = function() {
   };
 
 };
+
+/**
+ * 根据浏览器，为样式添加前缀
+ * @param unprefixed
+ * @returns {*}
+ */
+EPUBJS.core.prefixed = function (unprefixed) {
+  var vendors = ["Webkit", "Moz", "O", "ms"],
+      upper = unprefixed[0].toUpperCase() + unprefixed.slice(1),
+      length = vendors.length;
+
+  if(typeof(document.body.style[unprefixed]) != 'undefined'){
+    return unprefixed;
+  }
+
+  for(var i = 0; i < length; i++){
+    if(typeof (document.body.style[vendors[i] + upper]) != 'undefined'){
+      return vendors[i] + upper;
+    }
+  }
+
+  return unprefixed;
+};

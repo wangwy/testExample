@@ -1,4 +1,5 @@
-EPUBJS.View = function (section) {
+EPUBJS.View = function (section, options) {
+  this.settings = options || {};
   this.id = "epubjs-view:" + EPUBJS.core.uuid();
   this.section = section;
   this.index = section.index;
@@ -12,7 +13,11 @@ EPUBJS.View = function (section) {
 
   this.displayed = false;
   this.rendered = false;
-  this.element.style.display = "block";
+  if (this.settings.axis && this.settings.axis == "horizontal") {
+    this.element.style.display = "inline-block";
+  } else {
+    this.element.style.display = "block";
+  }
   this.listenedEvents = ["keydown", "keyup", "keypressed", "mouseup", "mousedown", "click", "touchend", "touchstart"];
 
 };

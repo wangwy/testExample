@@ -130,3 +130,18 @@ EPUBJS.Views.prototype.show = function () {
 EPUBJS.Views.prototype.each = function () {
   return this._views.forEach.apply(this._views,arguments);
 };
+
+/**
+ * 清楚view
+ */
+EPUBJS.Views.prototype.clear = function () {
+  var view;
+  var len = this.length;
+  if(!this.length) return;
+  for(var i = 0; i < len; i++){
+    view = this._views[i];
+    this.destroy(view);
+  }
+  this._views = [];
+  this.length = 0;
+};
